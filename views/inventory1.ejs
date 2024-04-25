@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Inventory</title>
+</head>
+<body>
+    
+    <h1>Inventory</h1>
+    <img src="/boss yvan.jpg">
+    <a href="/">Back</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            <% inventory.forEach(item => { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td id="quantity-<%= item.product_id %>"><%= item.quantity %></td>
+                    <td><%= item.status %></td>
+                    <td>
+                        <!-- Increase Button -->
+                        <button class="increase-button" data-product-id="<%= item.product_id %>">Increase</button>
+                        
+                        <!-- Decrease Button -->
+                        <button class="decrease-button" data-product-id="<%= item.product_id %>">Decrease</button>
+                        <button id="updateButton">Update</button>
+                        <script>
+                            document.getElementById('updateButton').addEventListener('click', function() {
+                            window.location.href = './inventory'; // Navigate to the inventory page
+                            });
+                        </script>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <!-- Client-side JavaScript for handling increase and decrease buttons -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const increaseButtons = document.querySelectorAll('.increase-button');
+        const decreaseButtons = document.querySelectorAll('.decrease-button');
+
+        increaseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.productId;
+                updateQuantity(productId, 'increase');
+            });
+        });
+
+        decreaseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.productId;
+                updateQuantity(productId, 'decrease');
+            });
+        });
+
+        function updateQuantity(productId, action) {
+            fetch(`/inventory/${productId}/${action}`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update quantity');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the quantity displayed on the page
+                const quantityElement = document.getElementById(`quantity-${productId}`);
+                quantityElement.textContent = data.quantity;
+            })
+            .catch(error => {
+                console.error('Error updating quantity:', error);
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>

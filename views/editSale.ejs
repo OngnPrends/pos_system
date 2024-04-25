@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Edit Sale</title>
+</head>
+<body>
+    
+    <h1>Edit Sale</h1>
+    <img src="/boss ronald.jpg">
+    <a href="/sales">Back to Sales</a>
+
+    <form action="/sales/<%= sale.sale_id %>/edit" method="POST">
+        <label for="quantity">Quantity Sold:</label>
+        <input type="number" name="quantity" id="quantity" value="<%= sale.quantity_sold %>" required>
+        <button type="submit">Update Sale</button>
+    </form>
+
+</body>
+</html>

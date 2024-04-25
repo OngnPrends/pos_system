@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Sales</title>
+</head>
+<body>
+    
+    <h1>Sales</h1>
+    <img src="/boss ronald.jpg">
+    <a href="/">Back</a>
+    <a href="/recordSale">Add Sale</a>
+
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Products</th>
+                <th>Quantity Sold</th>
+                <th>Sale Date</th>
+                <th>Actions</th> <!-- Add a new column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            <% sales.forEach(sale => { %>
+                <tr>
+                    <td><%= sale.product_name %></td>
+                    <td><%= sale.quantity_sold %></td>
+                    <td><%= new Date(sale.sale_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+                    <td>
+                        <form action="/sales/<%= sale.sale_id %>/edit" method="GET">
+                            <button type="submit">Edit</button>
+                        </form>
+                        
+                        <form action="/sales/<%= sale.sale_id %>/delete" method="POST">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</body>
+</html>

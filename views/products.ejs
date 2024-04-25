@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Products</title>
+</head>
+<body>
+    
+    <h1>Products</h1>
+    <img src="/boss tristan.jpg">
+    <a href="/">Back</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product => { %>
+                <tr>
+                    <td><%= product.name %></td>
+                    <td>Php <%= product.price %></td>
+                    <td>
+                        <form action="/products/<%= product.product_id %>/edit" method="GET">
+                            <button type="submit">Edit</button>
+                        </form>
+                        
+                        <form action="/products/<%= product.product_id %>/delete" method="POST">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <form action="/products/add" method="GET">
+        <button type="submit">Add Product</button>
+    </form>
+
+</body>
+</html>

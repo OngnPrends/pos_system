@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Inventory</title>
+</head>
+<body>
+    
+    <h1>Inventory</h1>
+    <img src="/boss yvan.jpg">
+    <a href="/">Back</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Update</th> 
+            </tr>
+        </thead>
+        <tbody>
+            <% inventory.forEach(item => { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.quantity %></td>
+                    <td><%= item.status %></td>
+                    <td>
+                        <form action="/inventory/<%= item.product_id %>/increase" method="POST">
+                            <button type="submit">Increase</button>
+                        </form>
+                        
+                        <form action="/inventory/<%= item.product_id %>/decrease" method="POST">
+                            <button type="submit">Decrease</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</body>
+</html>
