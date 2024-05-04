@@ -1,23 +1,24 @@
 body {
-    display: flex;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f9f9f9;
     padding: 20px;
+    text-align: center;
 }
 
-nav {
-    flex: 0 0 auto;
-    width: 200px;
+h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-main {
-    flex: 1;
-    margin: auto;
-    text-align: center; /* Center align the content within main */
+h2 {
+    font-size: 24px;
+    color: #666;
+    margin-bottom: 15px;
 }
 
 a {
-    display: block;
+    display: inline-block;
     margin: 10px;
     padding: 10px 20px;
     background-color: #1976D2;
@@ -31,10 +32,6 @@ a:hover {
     background-color: #1565C0;
 }
 
-h1, h2 {
-    text-align: center; /* Center align the headers */
-}
-
 img {
     display: block;
     margin: auto;
@@ -46,7 +43,7 @@ img {
 
 table {
     margin: auto;
-    min-width: 60%; /* Set a minimum width */
+    min-width: 60%;
     border-collapse: collapse;
     border-radius: 10px;
     overflow: hidden;
@@ -54,7 +51,7 @@ table {
 
 th, td {
     padding: 15px;
-    text-align: center; /* Center align text */
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 
@@ -91,25 +88,25 @@ td {
 }
 
 .product-gallery {
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: space-around; 
-    margin-top: 20px; 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
 }
 
 .product-item {
-    width: 30%; 
-    margin-bottom: 20px; 
-    padding: 20px; 
-    border: 1px solid #ccc; 
-    box-sizing: border-box; 
+    width: 30%;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 .product-item img {
-    max-width: 100%; 
-    height: auto; 
+    max-width: 100%;
+    height: auto;
 }
 
 .product-item form {
-    margin-top: 10px; 
+    margin-top: 10px;
 }
