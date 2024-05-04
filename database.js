@@ -123,6 +123,8 @@ async function decreaseStock(productId) {
   }
 }
 
+//SALES
+
 async function getSales() {
   try {
     const query = `
@@ -203,21 +205,42 @@ async function getSaleById(saleId) {
   }
 }
 
-// Update a sale by saleId with new data
 async function editSale(saleId, newData) {
   try {
-      // Assuming newData is an object containing fields to be updated
-      const query = "UPDATE sales SET ? WHERE sale_id = ?";
-      const [result] = await pool.promise().execute(query, [newData, saleId]);
-      if (result.affectedRows === 0) {
-          throw new Error(`Sale with ID ${saleId} not found`);
-      }
-      console.log(`Sale with ID ${saleId} updated successfully`);
+    const { quantity_sold } = newData;
+
+    const query = "UPDATE sales SET quantity_sold = ? WHERE sale_id = ?";
+    const [result] = await pool.promise().execute(query, [quantity_sold, saleId]);
+
+    if (result.affectedRows === 0) {
+      throw new Error(`Sale with ID ${saleId} not found`);
+    }
+
+    console.log(`Sale with ID ${saleId} updated successfully`);
   } catch (error) {
-      console.error("Error updating sale:", error);
-      throw error;
+    console.error("Error updating sale:", error);
+    throw error;
   }
 }
+
+
+async function getTotalSalesForToday() {
+  try {
+    const query = `
+      SELECT SUM(quantity_sold) AS total_sales
+      FROM sales
+      WHERE DATE(sale_date) = CURDATE() AND HOUR(sale_date) = HOUR(NOW());
+    `;
+    
+    const [rows] = await pool.promise().query(query);
+    const totalSales = rows[0].total_sales || 0; 
+    return totalSales;
+  } catch (error) {
+    console.error("Error fetching total sales for today:", error);
+    throw error;
+  }
+}
+
 
 
 module.exports = { 
@@ -235,5 +258,6 @@ module.exports = {
   recordSale,
   deleteSale,
   getSaleById,
-  editSale
+  editSale,
+  getTotalSalesForToday
 };
