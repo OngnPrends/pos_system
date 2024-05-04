@@ -10,6 +10,6 @@ To initialize the program:
 6. Open package.json, and enter these two under Scripts:
 	"start": "node server.js",
     	"dev": "npx nodemon server.js"
-7. Enter your mysql password on password on database.js
+7. Update your mysql password on database.js
 8. On Terminal, enter npm run dev
 9. On browser, go to localhost:8080
