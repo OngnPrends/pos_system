@@ -8,27 +8,23 @@
 </head>
 <body>
     
-    <h1>Sales</h1>
-    <img src="/boss ronald.jpg">
-    <a href="/">Back</a>
-    <a href="/recordSale">Add Sale</a>
-
+    <%- include('navbar') %> 
     
     <table>
         <thead>
             <tr>
+                <th>Sale Date</th>
                 <th>Products</th>
                 <th>Quantity Sold</th>
-                <th>Sale Date</th>
-                <th>Actions</th> <!-- Add a new column for actions -->
+                <th>Actions</th> 
             </tr>
         </thead>
         <tbody>
             <% sales.forEach(sale => { %>
                 <tr>
+                    <td><%= new Date(sale.sale_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
                     <td><%= sale.product_name %></td>
                     <td><%= sale.quantity_sold %></td>
-                    <td><%= new Date(sale.sale_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
                     <td>
                         <form action="/sales/<%= sale.sale_id %>/edit" method="GET">
                             <button type="submit">Edit</button>
@@ -42,6 +38,12 @@
             <% }) %>
         </tbody>
     </table>
+
+    <form action="/sales/add" method="GET">
+        <button type="submit">Add sale</button>
+    </form>
+
+    <img src="/boss ronald.jpg">
 
 </body>
 </html>

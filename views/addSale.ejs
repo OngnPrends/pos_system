@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>Record Sale</title>
+</head>
+
+<body>
+    <%- include('navbar') %> 
+
+    <div class="product-gallery">
+        <% products.forEach(function(product) { %>
+            <div class="product-item">
+                <h2><%= product.name %></h2>
+                <p><i><%= product.description %></i></p>
+                <p>Price: Php <%= parseFloat(product.price).toFixed(2) %></p> 
+                <p>Category: <%= product.category %></p>
+                <p>Available Quantity: <%= product.quantity %></p>
+                <form action="/sales/add" method="POST">
+                    <input type="hidden" name="productId" value="<%= product.product_id %>">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity_<%= product.product_id %>" min="1" max="<%= product.quantity %>" 
+                        required onchange="updateProductInfo('<%= product.product_id %>', '<%= product.name %>', '<%= product.price %>')">
+                    <button type="submit">Record Sale</button>
+                    <button type="button" onclick="goBack()">Cancel</button>
+                </form>
+            </div>
+        <% }); %>
+    </div>
+
+    <div class="receipt">
+        <h2>Sale Receipt</h2>
+        <ul id="saleDetails">
+            <!-- Receipt items will be dynamically added here -->
+        </ul>
+        <p id="totalCost">Total Cost: Php 0.00</p>
+    </div>
+
+    <script>
+        var saleDetails = []; 
+
+        function updateProductInfo(productId, productName, productPrice) {
+            var quantity = document.getElementById('quantity_' + productId).value;
+            var total = parseFloat(productPrice) * parseInt(quantity);
+            var productDetails = {
+                name: productName,
+                quantity: quantity,
+                totalCost: total
+            };
+            updateSaleDetails(productDetails);
+            displaySaleDetails();
+        }
+
+        function updateSaleDetails(productDetails) {
+            var existingProductIndex = saleDetails.findIndex(function(item) {
+                return item.name === productDetails.name;
+            });
+
+            if (existingProductIndex !== -1) {
+                saleDetails[existingProductIndex].quantity = productDetails.quantity;
+                saleDetails[existingProductIndex].totalCost = productDetails.totalCost;
+            } else {
+                saleDetails.push(productDetails);
+            }
+        }
+
+        function displaySaleDetails() {
+            var saleDetailsList = document.getElementById('saleDetails');
+            saleDetailsList.innerHTML = ''; 
+
+            var totalCost = 0;
+
+            saleDetails.forEach(function(item) {
+                var listItem = document.createElement('li');
+                listItem.textContent = `${item.name} - Quantity: ${item.quantity}, Total Cost: Php ${item.totalCost.toFixed(2)}`;
+                saleDetailsList.appendChild(listItem);
+
+                totalCost += item.totalCost;
+            });
+
+            document.getElementById('totalCost').textContent = `Total Cost: Php ${totalCost.toFixed(2)}`;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

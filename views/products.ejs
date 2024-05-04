@@ -8,15 +8,16 @@
 </head>
 <body>
     
-    <h1>Products</h1>
-    <img src="/boss tristan.jpg">
-    <a href="/">Back</a>
+    <%- include('navbar') %> 
 
     <table>
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
                 <th>Price</th>
+                <th>Stocks</th>
                 <th>Actions</th> 
             </tr>
         </thead>
@@ -24,7 +25,10 @@
             <% products.forEach(product => { %>
                 <tr>
                     <td><%= product.name %></td>
+                    <td><i><%= product.description %></i></td>
+                    <td><%= product.category %></td>
                     <td>Php <%= product.price %></td>
+                    <td><%= product.quantity %></td>
                     <td>
                         <form action="/products/<%= product.product_id %>/edit" method="GET">
                             <button type="submit">Edit</button>
@@ -42,6 +46,8 @@
     <form action="/products/add" method="GET">
         <button type="submit">Add Product</button>
     </form>
+
+    <img src="/boss tristan.jpg">
 
 </body>
 </html>
