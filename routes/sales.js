@@ -10,14 +10,18 @@ app.set('view engine', 'ejs')
 
 router.get('/', async (req, res) => {
     try {
-      const sales = await database.getSales();
-  
-      res.render("sales.ejs", {
-        sales
-      });
+        const sales = await database.getSales();
+        const products = await database.getProducts();
+        let totalProfit = await database.getTotalProfitForToday(); // Fetch total profit for the day
+        
+        res.render("sales.ejs", {
+            sales,
+            products,
+            totalProfit // Pass total profit to the template
+        });
     } catch (error) {
-      console.error("Error fetching sales:", error);
-      res.status(500).send("Internal Server Error");
+        console.error("Error fetching sales:", error);
+        res.status(500).send("Internal Server Error");
     }
 });
 
