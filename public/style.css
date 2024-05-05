@@ -32,7 +32,11 @@ a:hover {
 }
 
 h1, h2 {
-    text-align: center; /* Center align the headers */
+    text-align: left; /* Align headers to the left */
+}
+
+h2 {
+    margin-top: 10px; /* Add some space between headers */
 }
 
 img {
