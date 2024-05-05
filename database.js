@@ -240,23 +240,6 @@ async function editSale(saleId, newData) {
   }
 }
 
-async function getTotalSalesForToday() {
-  try {
-    const query = `
-      SELECT SUM(quantity_sold) AS total_sales
-      FROM sales
-      WHERE DATE(sale_date) = CURDATE() AND HOUR(sale_date) = HOUR(NOW());
-    `;
-    
-    const [rows] = await pool.promise().query(query);
-    const totalSales = rows[0].total_sales || 0; 
-    return totalSales;
-  } catch (error) {
-    console.error("Error fetching total sales for today:", error);
-    throw error;
-  }
-}
-
 async function getTotalProfitForToday() {
   try {
     const query = `
@@ -289,6 +272,5 @@ module.exports = {
   deleteSale,
   getSaleById,
   editSale,
-  getTotalSalesForToday,
   getTotalProfitForToday
 };
