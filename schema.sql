@@ -15,6 +15,7 @@ CREATE TABLE sales (
     product_id INT,
     quantity_sold INT,
     sale_date DATE,
+    total_profit DECIMAL(10,2)
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 

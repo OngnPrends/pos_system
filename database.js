@@ -142,7 +142,7 @@ async function getSales() {
 
 async function recordSale(productId, quantity) {
   return new Promise((resolve, reject) => {
-      pool.query('SELECT quantity FROM products WHERE product_id = ?', [productId], (error, results) => {
+      pool.query('SELECT quantity, price FROM products WHERE product_id = ?', [productId], (error, results) => {
           if (error) {
               reject(error);
               return;
@@ -152,12 +152,17 @@ async function recordSale(productId, quantity) {
               return;
           }
           const availableQuantity = results[0].quantity;
+          const pricePerUnit = results[0].price;
+
           if (availableQuantity < quantity) {
               reject(new Error('Insufficient quantity available'));
               return;
           }
 
-          pool.query('INSERT INTO sales (product_id, quantity_sold, sale_date) VALUES (?, ?, NOW())', [productId, quantity], (error, results) => {
+          const totalPrice = pricePerUnit * quantity;
+          const totalProfit = totalPrice.toFixed(2); // Round to 2 decimal places
+
+          pool.query('INSERT INTO sales (product_id, quantity_sold, sale_date, total_profit) VALUES (?, ?, NOW(), ?)', [productId, quantity, totalProfit], (error, results) => {
               if (error) {
                   reject(error);
                   return;
@@ -209,8 +214,20 @@ async function editSale(saleId, newData) {
   try {
     const { quantity_sold } = newData;
 
-    const query = "UPDATE sales SET quantity_sold = ? WHERE sale_id = ?";
-    const [result] = await pool.promise().execute(query, [quantity_sold, saleId]);
+    // Fetch the price of the product associated with the sale
+    const productQuery = "SELECT products.price FROM sales INNER JOIN products ON sales.product_id = products.product_id WHERE sales.sale_id = ?";
+    const [productResult] = await pool.promise().execute(productQuery, [saleId]);
+    if (productResult.length === 0) {
+      throw new Error(`Product not found for sale with ID ${saleId}`);
+    }
+    const price = productResult[0].price;
+
+    // Calculate the new total profit
+    const totalProfit = price * quantity_sold;
+
+    // Update both quantity_sold and total_profit fields in the sales table
+    const query = "UPDATE sales SET quantity_sold = ?, total_profit = ? WHERE sale_id = ?";
+    const [result] = await pool.promise().execute(query, [quantity_sold, totalProfit, saleId]);
 
     if (result.affectedRows === 0) {
       throw new Error(`Sale with ID ${saleId} not found`);
@@ -222,7 +239,6 @@ async function editSale(saleId, newData) {
     throw error;
   }
 }
-
 
 async function getTotalSalesForToday() {
   try {
@@ -241,7 +257,21 @@ async function getTotalSalesForToday() {
   }
 }
 
-
+async function getTotalProfitForToday() {
+  try {
+    const query = `
+      SELECT SUM(total_profit) AS total_profit
+      FROM sales
+      WHERE DATE(sale_date) = CURDATE();
+    `;
+    const [rows] = await pool.promise().query(query);
+    const totalProfit = rows[0].total_profit || 0;
+    return totalProfit;
+  } catch (error) {
+    console.error("Error fetching total profit for today:", error);
+    throw error;
+  }
+}
 
 module.exports = { 
   getProducts,
@@ -259,5 +289,6 @@ module.exports = {
   deleteSale,
   getSaleById,
   editSale,
-  getTotalSalesForToday
+  getTotalSalesForToday,
+  getTotalProfitForToday
 };
